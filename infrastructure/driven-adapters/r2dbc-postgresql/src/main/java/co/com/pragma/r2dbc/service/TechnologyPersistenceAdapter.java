@@ -11,8 +11,8 @@ import reactor.core.publisher.Mono;
 
 public class TechnologyPersistenceAdapter implements ITechnologyPersistencePort {
 
-    private ITechnologyRepository technologyRepository;
-    private ITechnologyMapper technologyMapper;
+    private final ITechnologyRepository technologyRepository;
+    private final ITechnologyMapper technologyMapper;
 
     public TechnologyPersistenceAdapter(ITechnologyRepository technologyRepository, ITechnologyMapper technologyMapper) {
         this.technologyRepository = technologyRepository;
@@ -33,9 +33,13 @@ public class TechnologyPersistenceAdapter implements ITechnologyPersistencePort 
     public Flux<Technology> findAllPaginated(int page, int size, String sortDirection) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, "name"));
-        System.out.println("paso");
-        return technologyRepository.findAllBy(pageRequest).doOnNext(technologyEntity -> System.out.println("Tecnology " + technologyEntity))
+
+        return technologyRepository.findAllBy(pageRequest)
                 .map(technologyMapper::toModel);
     }
 
+    @Override
+    public Mono<Long> countTechnologies() {
+        return technologyRepository.count();
+    }
 }
