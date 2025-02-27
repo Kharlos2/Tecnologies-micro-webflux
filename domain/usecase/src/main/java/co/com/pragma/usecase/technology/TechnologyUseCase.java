@@ -1,7 +1,9 @@
 package co.com.pragma.usecase.technology;
 
-import co.com.pragma.model.technology.PagedResponse;
-import co.com.pragma.model.technology.Technology;
+import co.com.pragma.model.technology.models.CapacityWithTechnologies;
+import co.com.pragma.model.technology.models.PagedResponse;
+import co.com.pragma.model.technology.models.Technology;
+import co.com.pragma.model.technology.models.ValidationResponse;
 import co.com.pragma.model.technology.api.ITechnologyServicePort;
 import co.com.pragma.model.technology.exceptions.ExceptionsEnum;
 import co.com.pragma.model.technology.spi.ITechnologyPersistencePort;
@@ -9,6 +11,8 @@ import co.com.pragma.model.technology.spi.ITechnologyPersistencePort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import co.com.pragma.model.technology.exceptions.CustomException;
+
+import java.util.List;
 
 
 public class TechnologyUseCase implements ITechnologyServicePort {
@@ -50,5 +54,25 @@ public class TechnologyUseCase implements ITechnologyServicePort {
 
         return Mono.zip(countRecords, technologiesFlux.collectList())
                 .map(tuple -> new PagedResponse<>(tuple.getT1(), page, size, tuple.getT2()));
+    }
+
+    @Override
+    public Mono<ValidationResponse> checkTechnologies(CapacityWithTechnologies capacityWithTechnologies) {
+        List<Long> requestedIds = capacityWithTechnologies.getTechnologiesIds();
+
+        return Flux.fromIterable(requestedIds)
+                .flatMap(technologyService::findById) // Buscar en la BD
+                .map(Technology::getId) // Obtener solo los IDs encontrados
+                .collectList()
+                .map(foundIds -> {
+                    List<Long> missingIds = requestedIds.stream()
+                            .filter(id -> !foundIds.contains(id))
+                            .toList();
+
+                    boolean isValid = missingIds.isEmpty();
+                    String message = isValid ? "All technologies exist" : "Missing technologies: " + missingIds;
+
+                    return new ValidationResponse(message, isValid);
+                });
     }
 }

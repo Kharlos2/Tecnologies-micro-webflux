@@ -1,9 +1,13 @@
 package co.com.pragma.api.handlers;
 
+import co.com.pragma.api.dto.capacity.CheckTechnologiesRequestDTO;
 import co.com.pragma.api.dto.save.SaveRequestDTO;
-import co.com.pragma.api.mapper.ISaveMapper;
-import co.com.pragma.model.technology.PagedResponse;
-import co.com.pragma.model.technology.Technology;
+import co.com.pragma.api.dto.save.SaveResponseDTO;
+import co.com.pragma.api.mapper.ITechnologiesMapper;
+import co.com.pragma.model.technology.models.CapacityWithTechnologies;
+import co.com.pragma.model.technology.models.PagedResponse;
+import co.com.pragma.model.technology.models.Technology;
+import co.com.pragma.model.technology.models.ValidationResponse;
 import co.com.pragma.model.technology.api.ITechnologyServicePort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -17,9 +21,9 @@ import reactor.core.publisher.Mono;
 public class TechnologyHandler {
 
     private final ITechnologyServicePort technologyServicePort;
-    private final ISaveMapper saveMapper;
+    private final ITechnologiesMapper saveMapper;
 
-    public TechnologyHandler(ITechnologyServicePort technologyServicePort, ISaveMapper saveMapper) {
+    public TechnologyHandler(ITechnologyServicePort technologyServicePort, ITechnologiesMapper saveMapper) {
         this.technologyServicePort = technologyServicePort;
         this.saveMapper = saveMapper;
     }
@@ -28,7 +32,7 @@ public class TechnologyHandler {
 
         Mono<Technology> technologyMono = serverRequest.bodyToMono(SaveRequestDTO.class).map(saveMapper::requestToModel);
         return technologyMono.flatMap(p -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(technologyServicePort.save(p), Technology.class));
+                .body((technologyServicePort.save(p)), SaveResponseDTO.class));
     }
 
     public Mono<ServerResponse> getAllTechnologies(ServerRequest request) {
@@ -41,5 +45,14 @@ public class TechnologyHandler {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(technologies, Technology.class);
+    }
+
+    public Mono<ServerResponse> checkTechnologies(ServerRequest request){
+
+        Mono<CapacityWithTechnologies> technologyMono = request.bodyToMono(CheckTechnologiesRequestDTO.class).map((saveMapper::checkToModel)).doOnNext(System.out::println);
+        return technologyMono.flatMap(technologyCapacity ->
+                ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(technologyServicePort.checkTechnologies(technologyCapacity), ValidationResponse.class));
     }
 }

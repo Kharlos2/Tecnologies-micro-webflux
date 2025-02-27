@@ -1,7 +1,7 @@
 package co.com.pragma.usecase.technology;
 
-import co.com.pragma.model.technology.PagedResponse;
-import co.com.pragma.model.technology.Technology;
+import co.com.pragma.model.technology.models.PagedResponse;
+import co.com.pragma.model.technology.models.Technology;
 import co.com.pragma.model.technology.exceptions.CustomException;
 import co.com.pragma.model.technology.exceptions.ExceptionsEnum;
 import co.com.pragma.model.technology.spi.ITechnologyPersistencePort;
