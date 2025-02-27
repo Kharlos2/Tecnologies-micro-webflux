@@ -1,6 +1,6 @@
 package co.com.pragma.r2dbc.service;
 
-import co.com.pragma.model.technology.Technology;
+import co.com.pragma.model.technology.models.Technology;
 import co.com.pragma.model.technology.spi.ITechnologyPersistencePort;
 import co.com.pragma.r2dbc.mapper.ITechnologyMapper;
 import co.com.pragma.r2dbc.repository.ITechnologyRepository;
@@ -41,5 +41,10 @@ public class TechnologyPersistenceAdapter implements ITechnologyPersistencePort 
     @Override
     public Mono<Long> countTechnologies() {
         return technologyRepository.count();
+    }
+
+    @Override
+    public Mono<Technology> findById(Long id) {
+        return technologyRepository.findById(id).map(technologyMapper::toModel);
     }
 }

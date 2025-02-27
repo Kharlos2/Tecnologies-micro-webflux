@@ -1,4 +1,4 @@
-package co.com.pragma.model.technology;
+package co.com.pragma.model.technology.models;
 
 public class Technology {
 
