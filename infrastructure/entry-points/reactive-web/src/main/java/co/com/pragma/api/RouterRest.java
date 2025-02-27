@@ -26,7 +26,8 @@ public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerTechnologyCapacityFunction (TechnologyCapacityHandler technologyCapacityHandler){
         return route(
-                POST("/api/technologies-capacity"), technologyCapacityHandler::saveTechnologyCapacities
-        );
+                POST("/api/technologies-capacity"), technologyCapacityHandler::saveTechnologyCapacities)
+                .andRoute(GET("/api/technologies-capacity"), technologyCapacityHandler::findTechnologiesByCapacity)
+        ;
     }
 }
