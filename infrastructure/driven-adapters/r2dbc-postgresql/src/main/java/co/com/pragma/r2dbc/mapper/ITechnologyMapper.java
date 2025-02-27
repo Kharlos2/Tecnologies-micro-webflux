@@ -13,4 +13,6 @@ public interface ITechnologyMapper {
 
     Technology toModel(TechnologyEntity technologyEntity);
 
+
+
 }

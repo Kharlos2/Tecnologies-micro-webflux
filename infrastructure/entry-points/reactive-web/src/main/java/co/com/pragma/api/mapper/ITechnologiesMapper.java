@@ -3,6 +3,7 @@ package co.com.pragma.api.mapper;
 import co.com.pragma.api.dto.capacity.CheckTechnologiesRequestDTO;
 import co.com.pragma.api.dto.save.SaveRequestDTO;
 import co.com.pragma.api.dto.save.SaveResponseDTO;
+import co.com.pragma.api.dto.technologycapacity.TechnologyForCapacityDTO;
 import co.com.pragma.model.technology.models.CapacityWithTechnologies;
 import co.com.pragma.model.technology.models.Technology;
 import org.mapstruct.Mapper;
@@ -17,5 +18,7 @@ public interface ITechnologiesMapper {
     SaveResponseDTO modelToResponse(Technology technologyModel);
 
     CapacityWithTechnologies checkToModel (CheckTechnologiesRequestDTO checkTechnologiesRequestDTO);
+
+    TechnologyForCapacityDTO modelToTechnologyForCapacity (Technology technologyModel);
 
 }
