@@ -5,6 +5,7 @@ import co.com.pragma.api.mapper.ITechnologiesMapper;
 import co.com.pragma.model.technology.api.ITechnologyCapacityServicePort;
 import co.com.pragma.model.technology.models.CapacityWithTechnologies;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -28,7 +29,7 @@ public class TechnologyCapacityHandler{
     public Mono<ServerResponse> saveTechnologyCapacities(ServerRequest request) {
         Mono<CapacityWithTechnologies> capacityWithTechnologies = request.bodyToMono(CapacityWithTechnologies.class);
         return capacityWithTechnologies.flatMap(capacityTechnologies ->
-                ServerResponse.ok()
+                ServerResponse.status(HttpStatusCode.valueOf(201))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(technologyCapacityServicePort.saveTechnologyCapacities(capacityTechnologies), Void.class));
 
