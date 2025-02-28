@@ -1,7 +1,7 @@
 package co.com.pragma.usecase.technology;
 
 import co.com.pragma.model.technology.models.CapacityWithTechnologies;
-import co.com.pragma.model.technology.models.PagedResponse;
+import co.com.pragma.model.technology.models.PagedResponseTechnologies;
 import co.com.pragma.model.technology.models.Technology;
 import co.com.pragma.model.technology.models.ValidationResponse;
 import co.com.pragma.model.technology.api.ITechnologyServicePort;
@@ -48,12 +48,12 @@ public class TechnologyUseCase implements ITechnologyServicePort {
     }
 
     @Override
-    public Mono<PagedResponse<Technology>> getTechnologiesPaginated(int page, int size, String sortDirection) {
+    public Mono<PagedResponseTechnologies> getTechnologiesPaginated(int page, int size, String sortDirection) {
         Mono<Long> countRecords = technologyService.countTechnologies();
         Flux<Technology> technologiesFlux = technologyService.findAllPaginated(page, size, sortDirection);
 
         return Mono.zip(countRecords, technologiesFlux.collectList())
-                .map(tuple -> new PagedResponse<>(tuple.getT1(), page, size, tuple.getT2()));
+                .map(tuple -> new PagedResponseTechnologies(tuple.getT1(), page, size, tuple.getT2()));
     }
 
     @Override

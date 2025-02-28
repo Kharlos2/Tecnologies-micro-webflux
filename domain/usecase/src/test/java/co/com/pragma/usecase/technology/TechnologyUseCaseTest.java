@@ -1,7 +1,7 @@
 package co.com.pragma.usecase.technology;
 
 import co.com.pragma.model.technology.models.CapacityWithTechnologies;
-import co.com.pragma.model.technology.models.PagedResponse;
+import co.com.pragma.model.technology.models.PagedResponseTechnologies;
 import co.com.pragma.model.technology.models.Technology;
 import co.com.pragma.model.technology.exceptions.CustomException;
 import co.com.pragma.model.technology.exceptions.ExceptionsEnum;
@@ -110,7 +110,7 @@ class TechnologyUseCaseTest {
                 .thenReturn(Flux.fromIterable(mockTechnologies));
 
 
-        Mono<PagedResponse<Technology>> resultMono = technologyUseCase.getTechnologiesPaginated(page, size, sortDirection);
+        Mono<PagedResponseTechnologies> resultMono = technologyUseCase.getTechnologiesPaginated(page, size, sortDirection);
 
         // 🔹 Verificar con StepVerifier
         StepVerifier.create(resultMono)
@@ -118,9 +118,9 @@ class TechnologyUseCaseTest {
                     assertEquals(totalRecords, pagedResponse.getCount());
                     assertEquals(page, pagedResponse.getPage());
                     assertEquals(size, pagedResponse.getSize());
-                    assertEquals(mockTechnologies.size(), pagedResponse.getItems().size());
-                    assertEquals("Java", pagedResponse.getItems().get(0).getName());
-                    assertEquals("Python", pagedResponse.getItems().get(1).getName());
+                    assertEquals(mockTechnologies.size(), pagedResponse.getTechnologies().size());
+                    assertEquals("Java", pagedResponse.getTechnologies().get(0).getName());
+                    assertEquals("Python", pagedResponse.getTechnologies().get(1).getName());
                 })
                 .verifyComplete();
 

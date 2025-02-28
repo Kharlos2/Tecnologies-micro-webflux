@@ -2,18 +2,18 @@ package co.com.pragma.model.technology.models;
 
 import java.util.List;
 
-public class PagedResponse<T> {
+public class PagedResponseTechnologies {
 
     private long count;
     private int page;
     private int size;
-    private List<T> items;
+    private List<Technology> technologies;
 
-    public PagedResponse(long count, int page, int size, List<T> items) {
+    public PagedResponseTechnologies(long count, int page, int size, List<Technology> technologies) {
         this.count = count;
         this.page = page;
         this.size = size;
-        this.items = items;
+        this.technologies = technologies;
     }
 
     // Getters y Setters
@@ -41,12 +41,12 @@ public class PagedResponse<T> {
         this.size = size;
     }
 
-    public List<T> getItems() {
-        return items;
+    public List<Technology> getTechnologies() {
+        return technologies;
     }
 
-    public void setItems(List<T> items) {
-        this.items = items;
+    public void setTechnologies(List<Technology> technologies) {
+        this.technologies = technologies;
     }
 
 }
